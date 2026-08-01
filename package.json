@@ -1,0 +1,21 @@
+{
+  "name": "sensi-matrix-ai",
+  "version": "2.0.0",
+  "description": "Générateur de sensibilité Free Fire - Par Housseini",
+  "main": "app.js",
+  "scripts": {
+    "start": "npx http-server -p 8000",
+    "dev": "npx live-server --port=8000"
+  },
+  "keywords": ["free-fire", "sensitivity", "generator", "gaming"],
+  "author": "Housseini",
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.0.0",
+    "three": "^0.128.0"
+  },
+  "devDependencies": {
+    "http-server": "^14.0.0",
+    "live-server": "^0.0.0"
+  }
+}
