@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SENSI MATRIX AI 🔥 | Free Fire Sensitivity Generator</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="particles-container"></div>
+  <div class="matrix-container">
+    <header class="matrix-header">
+      <div class="logo-section">
+        <i class="fa-solid fa-brain logo-icon"></i>
+        <h1 class="main-title">SENSI MATRIX <span class="accent">AI</span></h1>
+      </div>
+      <p class="tagline">L'Intelligence Artificielle au service de ton aim 🎯</p>
+      <div class="version-badge">v2.0 PRO</div>
+    </header>
+    <main class="matrix-content">
+      <section class="matrix-section" id="step1">
+        <div class="section-header">
+          <i class="fa-solid fa-mobile-screen"></i>
+          <h2>ÉTAPE 1 : Ton Device</h2>
+        </div>
+        <div class="input-group">
+          <label for="deviceName"><i class="fa-solid fa-keyboard"></i> Entre ton modèle de téléphone</label>
+          <input type="text" id="deviceName" placeholder="Ex: Tecno Pop 2, Samsung A12, Redmi Note 10, iPhone 13..." autocomplete="off">
+          <div class="input-hint"><i class="fa-solid fa-lightbulb"></i> Astuce : Sois précis pour une meilleure analyse</div>
+        </div>
+        <button class="btn-scan" onclick="analyzeDevice()">
+          <i class="fa-solid fa-radar"></i><span>ANALYSER LE DEVICE</span>
+        </button>
+      </section>
+      <section class="matrix-section hidden" id="step2">
+        <div class="section-header">
+          <i class="fa-solid fa-microchip"></i>
+          <h2>RÉSULTATS DE L'ANALYSE</h2>
+        </div>
+        <div class="device-info-card">
+          <div class="device-name-display" id="deviceNameDisplay">
+            <i class="fa-solid fa-mobile"></i><span id="displayDeviceName">--</span>
+          </div>
+          <div class="specs-grid">
+            <div class="spec-item"><i class="fa-solid fa-memory"></i><div class="spec-label">RAM</div><div class="spec-value" id="specRam">--</div></div>
+            <div class="spec-item"><i class="fa-solid fa-microchip"></i><div class="spec-label">CPU</div><div class="spec-value" id="specCpu">--</div></div>
+            <div class="spec-item"><i class="fa-solid fa-display"></i><div class="spec-label">Écran</div><div class="spec-value" id="specScreen">--</div></div>
+            <div class="spec-item"><i class="fa-solid fa-gauge-high"></i><div class="spec-label">Score</div><div class="spec-value score" id="specScore">--/10</div></div>
+          </div>
+          <div class="performance-bar">
+            <div class="bar-label">Performance Globale</div>
+            <div class="bar-container"><div class="bar-fill" id="performanceBar"></div></div>
+            <div class="bar-percentage" id="performancePercent">0%</div>
+          </div>
+        </div>
+        <button class="btn-next" onclick="goToStep3()"><i class="fa-solid fa-arrow-right"></i> CONTINUER</button>
+      </section>
+      <section class="matrix-section hidden" id="step3">
+        <div class="section-header">
+          <i class="fa-solid fa-gamepad"></i>
+          <h2>ÉTAPE 2 : Ton Style de Jeu</h2>
+        </div>
+        <p class="section-desc">Choisis ton profil pour personnaliser ta sensibilité</p>
+        <div class="playstyle-grid">
+          <div class="playstyle-card" onclick="selectPlaystyle('rusher')" id="cardRusher">
+            <div class="playstyle-icon"><i class="fa-solid fa-person-running"></i></div>
+            <h3>RUSHER</h3>
+            <p>Aggressif, corps-à-corps, spray rapide</p>
+            <div class="playstyle-tags"><span>🏃 Rapide</span><span>💥 Agressif</span></div>
+          </div>
+          <div class="playstyle-card" onclick="selectPlaystyle('sniper')" id="cardSniper">
+            <div class="playstyle-icon"><i class="fa-solid fa-crosshairs"></i></div>
+            <h3>SNIPER</h3>
+            <p>Précision, headshots, longue distance</p>
+            <div class="playstyle-tags"><span>🎯 Précis</span><span>🔭 Loin</span></div>
+          </div>
+          <div class="playstyle-card" onclick="selectPlaystyle('balanced')" id="cardBalanced">
+            <div class="playstyle-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+            <h3>BALANCED</h3>
+            <p>Équilibré, polyvalent, adaptable</p>
+            <div class="playstyle-tags"><span>⚖️ Équilibré</span><span>🔄 Flexible</span></div>
+          </div>
+        </div>
+      </section>
+      <section class="matrix-section hidden" id="step4">
+        <div class="section-header">
+          <i class="fa-solid fa-crosshairs"></i>
+          <h2>TA SENSI GÉNÉRÉE</h2>
+        </div>
+        <div class="sensi-results-container">
+          <div class="result-header">
+            <div class="device-mini-info"><i class="fa-solid fa-mobile"></i><span id="resultDeviceName">--</span></div>
+            <div class="playstyle-mini-info"><i class="fa-solid fa-gamepad"></i><span id="resultPlaystyle">--</span></div>
+          </div>
+          <div class="sensi-grid">
+            <div class="sensi-card"><div class="sensi-label"><i class="fa-solid fa-arrows-spin"></i><span>Général</span></div><div class="sensi-value" id="valGeneral">0</div><button class="btn-copy" onclick="copyValue('valGeneral')"><i class="fa-regular fa-copy"></i></button></div>
+            <div class="sensi-card"><div class="sensi-label"><i class="fa-solid fa-dot-circle"></i><span>Red Dot</span></div><div class="sensi-value" id="valRedDot">0</div><button class="btn-copy" onclick="copyValue('valRedDot')"><i class="fa-regular fa-copy"></i></button></div>
+            <div class="sensi-card"><div class="sensi-label"><i class="fa-solid fa-magnifying-glass"></i><span>2x Scope</span></div><div class="sensi-value" id="val2x">0</div><button class="btn-copy" onclick="copyValue('val2x')"><i class="fa-regular fa-copy"></i></button></div>
+            <div class="sensi-card"><div class="sensi-label"><i class="fa-solid fa-magnifying-glass-plus"></i><span>4x Scope</span></div><div class="sensi-value" id="val4x">0</div><button class="btn-copy" onclick="copyValue('val4x')"><i class="fa-regular fa-copy"></i></button></div>
+            <div class="sensi-card"><div class="sensi-label"><i class="fa-solid fa-binoculars"></i><span>Sniper Scope</span></div><div class="sensi-value" id="valSniper">0</div><button class="btn-copy" onclick="copyValue('valSniper')"><i class="fa-regular fa-copy"></i></button></div>
+            <div class="sensi-card"><div class="sensi-label"><i class="fa-solid fa-eye"></i><span>Free Look</span></div><div class="sensi-value" id="valFreeLook">0</div><button class="btn-copy" onclick="copyValue('valFreeLook')"><i class="fa-regular fa-copy"></i></button></div>
+            <div class="sensi-card full-width"><div class="sensi-label"><i class="fa-solid fa-fingerprint"></i><span>Bouton de Tir</span></div><div class="sensi-value" id="valFireButton">0%</div><button class="btn-copy" onclick="copyValue('valFireButton')"><i class="fa-regular fa-copy"></i></button></div>
+            <div class="sensi-card full-width"><div class="sensi-label"><i class="fa-solid fa-gauge"></i><span>DPI Recommandé</span></div><div class="sensi-value dpi" id="valDpi">--</div></div>
+          </div>
+        </div>
+        <div class="action-buttons">
+          <button class="btn-action btn-download" onclick="downloadConfig()"><i class="fa-solid fa-download"></i><span>TÉLÉCHARGER CONFIG</span></button>
+          <button class="btn-action btn-share" onclick="shareResults()"><i class="fa-solid fa-share-nodes"></i><span>PARTAGER</span></button>
+        </div>
+        <div class="test-section">
+          <h3><i class="fa-solid fa-target"></i> Teste Ton Aim</h3>
+          <p>Mini-jeu pour vérifier ta nouvelle sensibilité</p>
+          <button class="btn-test" onclick="launchAimTest()"><i class="fa-solid fa-play"></i><span>LANCER LE TEST</span></button>
+        </div>
+      </section>
+    </main>
+    <footer class="matrix-footer">
+      <p><i class="fa-solid fa-code"></i> Développé avec ❤️ par <strong>Housseini</strong></p>
+      <p class="disclaimer"><i class="fa-solid fa-triangle-exclamation"></i> Cet outil est à but éducatif. Joue de manière responsable.</p>
+    </footer>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="particles.js"></script>
+  <script src="supabase.js"></script>
+  <script src="app.js"></script>
+</body>
+          </html>
