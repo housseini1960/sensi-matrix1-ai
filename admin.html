@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔐 Admin - SENSI MATRIX AI | Housseini</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .admin-container { max-width: 800px; margin: 0 auto; padding: 20px; }
+    .header { text-align: center; margin-bottom: 30px; }
+    .header h1 { font-family: var(--font-title); color: var(--primary); margin-bottom: 10px; }
+    .login-box, .admin-panel { background: var(--bg-card); border: 1px solid rgba(0, 243, 255, 0.3); border-radius: 12px; padding: 30px; }
+    .hidden { display: none; }
+    .form-group { margin-bottom: 20px; }
+    label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--primary); }
+    input, select { width: 100%; padding: 12px; background: rgba(5, 10, 20, 0.9); border: 1px solid rgba(0, 243, 255, 0.3); border-radius: 8px; color: #fff; font-size: 1rem; }
+    .btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #00f3ff, #0066ff); border: none; border-radius: 8px; color: #000; font-weight: 900; cursor: pointer; font-size: 1rem; margin-bottom: 10px; }
+    .btn:hover { opacity: 0.9; }
+    .btn-danger { background: linear-gradient(135deg, #ff0055, #ff6600); color: #fff; }
+    .device-list { margin-top: 30px; }
+    .device-item { background: rgba(0, 243, 255, 0.05); padding: 12px; margin-bottom: 10px; border-radius: 6px; border-left: 3px solid var(--primary); }
+    .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 30px; }
+    .stat-card { background: rgba(0, 243, 255, 0.1); padding: 15px; border-radius: 8px; text-align: center; }
+    .stat-value { font-size: 2rem; font-weight: 900; color: var(--primary); }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <div class="header">
+      <h1><i class="fa-solid fa-shield-halved"></i> ADMIN PANEL</h1>
+      <p>SENI MATRIX AI - Développé par Housseini</p>
+    </div>
+
+    <div class="login-box" id="loginBox">
+      <h2 style="margin-bottom: 20px; color: var(--primary);">🔐 Connexion Admin</h2>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="adminEmail" placeholder="ton@email.com">
+      </div>
+      <div class="form-group">
+        <label>Mot de passe</label>
+        <input type="password" id="adminPassword" placeholder="••••••••">
+      </div>
+      <button class="btn" onclick="handleLogin()"><i class="fa-solid fa-sign-in-alt"></i> SE CONNECTER</button>
+      <button class="btn" onclick="handleSignup()" style="background: linear-gradient(135deg, #00ff88, #00cc66);"><i class="fa-solid fa-user-plus"></i> CRÉER UN COMPTE</button>
+    </div>
+
+    <div class="admin-panel hidden" id="adminPanel">
+      <div style="text-align: right; margin-bottom: 20px;">
+        <button class="btn btn-danger" onclick="handleLogout()" style="width: auto; padding: 10px 20px;"><i class="fa-solid fa-sign-out-alt"></i> Déconnexion</button>
+      </div>
+
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-value" id="totalDevices">0</div>
+          <div>Devices dans la base</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="totalGenerations">0</div>
+          <div>Générations aujourd'hui</div>
+        </div>
+      </div>
+
+      <h2 style="margin-bottom: 20px; color: var(--primary);">➕ Ajouter un Device</h2>
+      
+      <div class="form-group">
+        <label>Marque</label>
+        <select id="deviceBrand">
+          <option value="Tecno">Tecno</option>
+          <option value="Infinix">Infinix</option>
+          <option value="Samsung">Samsung</option>
+          <option value="Redmi">Redmi</option>
+          <option value="Xiaomi">Xiaomi</option>
+          <option value="Realme">Realme</option>
+          <option value="iPhone">iPhone</option>
+          <option value="Itel">Itel</option>
+          <option value="Nokia">Nokia</option>
+          <option value="Huawei">Huawei</option>
+          <option value="Vivo">Vivo</option>
+          <option value="Oppo">Oppo</option>
+          <option value="Autre">Autre</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label>Modèle</label>
+        <input type="text" id="deviceModel" placeholder="Ex: Spark 10, A12, Pop 2...">
+      </div>
+      
+      <div class="form-group">
+        <label>Nom complet</label>
+        <input type="text" id="deviceFullName" placeholder="Ex: Tecno Spark 10">
+      </div>
+      
+      <div class="form-group">
+        <label>RAM</label>
+        <select id="deviceRam">
+          <option value="1GB">1GB</option>
+          <option value="2GB">2GB</option>
+          <option value="3GB">3GB</option>
+          <option value="4GB">4GB</option>
+          <option value="6GB">6GB</option>
+          <option value="8GB">8GB</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label>CPU</label>
+        <input type="text" id="deviceCpu" placeholder="Ex: Octa-core 2.0GHz">
+      </div>
+      
+      <div class="form-group">
+        <label>Écran</label>
+        <input type="text" id="deviceScreen" placeholder="Ex: 6.6&quot;">
+      </div>
+      
+      <div class="form-group">
+        <label>Score Performance (1-10)</label>
+        <input type="number" id="deviceScore" min="1" max="10" value="5">
+      </div>
+      
+      <button class="btn" onclick="handleAddDevice()"><i class="fa-solid fa-plus"></i> AJOUTER LE DEVICE</button>
+
+      <div class="device-list">
+        <h3 style="margin-bottom: 15px; color: var(--primary);">📋 Derniers Devices Ajoutés</h3>
+        <div id="devicesList"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="supabase.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
